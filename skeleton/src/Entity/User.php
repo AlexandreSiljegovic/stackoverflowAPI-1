@@ -4,10 +4,15 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\InheritanceType;
+use PhpParser\Node\Expr\AssignOp\Mod;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[InheritanceType("SINGLE_TABLE")]
+#[ORM\DiscriminatorColumn(name: "discr", type: "string")]
+#[ORM\DiscriminatorMap(["user" => "User::class", "member" => "Member::class", "admin" => "Admin::class", "Moderator" => "Moderator::class"])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
