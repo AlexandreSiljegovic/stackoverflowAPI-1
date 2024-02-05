@@ -9,10 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 class Member extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue]
+    // #[ORM\Column]
+    // protected ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $registration_date = null;
