@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AnswerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,6 +30,21 @@ class Answer
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $link = null;
+
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'answers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Member $author;
+
+    #[ORM\ManyToMany(targetEntity: Comment::class, mappedBy: 'answer_subject_id')]
+    private Collection $comments;
+
+    #[ORM\ManyToOne(inversedBy: 'answers')]
+    private ?question $question_id = null;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +107,57 @@ class Answer
     public function setLink(?string $link): static
     {
         $this->link = $link;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Member
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Member $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->addAnswerSubjectId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            $comment->removeAnswerSubjectId($this);
+        }
+
+        return $this;
+    }
+
+    public function getQuestionId(): ?question
+    {
+        return $this->question_id;
+    }
+
+    public function setQuestionId(?question $question_id): static
+    {
+        $this->question_id = $question_id;
 
         return $this;
     }
