@@ -43,7 +43,7 @@ class Question
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Member $author_id = null;
 
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'questions')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'Questions')]
     private Collection $question_tag;
 
     public function __construct()
